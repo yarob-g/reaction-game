@@ -6,11 +6,26 @@ let playerPos = 135;
 let score = 0;
 let fallSpeed = 5;
 
-// حركة اللاعب
+// حركة اللاعب بالكيبورد
 document.addEventListener("keydown", (e) => {
   if (e.key === "ArrowLeft" && playerPos > 0) {
     playerPos -= 10;
   } else if (e.key === "ArrowRight" && playerPos < 270) {
+    playerPos += 10;
+  }
+  player.style.left = playerPos + "px";
+});
+
+// حركة اللاعب باللمس (تقسيم الشاشة لنصفين)
+game.addEventListener("touchstart", (e) => {
+  const touchX = e.touches[0].clientX;
+  const screenWidth = window.innerWidth;
+
+  if (touchX < screenWidth / 2 && playerPos > 0) {
+    // لمس في النصف الأيسر → تحرك يسار
+    playerPos -= 10;
+  } else if (touchX >= screenWidth / 2 && playerPos < 270) {
+    // لمس في النصف الأيمن → تحرك يمين
     playerPos += 10;
   }
   player.style.left = playerPos + "px";
@@ -22,7 +37,6 @@ function createObstacle() {
   obstacle.classList.add("obstacle");
   obstacle.style.left = Math.floor(Math.random() * 270) + "px";
   game.appendChild(obstacle);
-
   let posY = 0;
 
   const move = setInterval(() => {
