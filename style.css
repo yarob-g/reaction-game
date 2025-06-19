@@ -9,12 +9,14 @@ body {
 
 #game {
   position: relative;
-  width: 300px;
+  width: 100%;
+  max-width: 300px;
   height: 400px;
   margin: 40px auto;
   background-color: #222;
   border: 2px solid #fff;
   overflow: hidden;
+  touch-action: none; /* يمنع التمرير أثناء اللعب */
 }
 
 #player {
