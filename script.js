@@ -6,7 +6,7 @@ let playerPos = 135;
 let score = 0;
 let fallSpeed = 5;
 
-// حركة اللاعب بالكيبورد
+// ✅ حركة الأسهم (كيبورد)
 document.addEventListener("keydown", (e) => {
   if (e.key === "ArrowLeft" && playerPos > 0) {
     playerPos -= 10;
@@ -16,45 +16,68 @@ document.addEventListener("keydown", (e) => {
   player.style.left = playerPos + "px";
 });
 
-// حركة اللاعب باللمس (تقسيم الشاشة لنصفين)
-game.addEventListener("touchstart", (e) => {
-  const touchX = e.touches[0].clientX;
-  const screenWidth = window.innerWidth;
+// ✅ دعم السحب (بالماوس أو التاتش)
+let isDragging = false;
 
-  if (touchX < screenWidth / 2 && playerPos > 0) {
-    // لمس في النصف الأيسر → تحرك يسار
-    playerPos -= 10;
-  } else if (touchX >= screenWidth / 2 && playerPos < 270) {
-    // لمس في النصف الأيمن → تحرك يمين
-    playerPos += 10;
-  }
-  player.style.left = playerPos + "px";
-});
+player.addEventListener("mousedown", startDrag);
+player.addEventListener("touchstart", startDrag);
 
-// إنشاء العقبات
+document.addEventListener("mousemove", drag);
+document.addEventListener("touchmove", drag);
+
+document.addEventListener("mouseup", stopDrag);
+document.addEventListener("touchend", stopDrag);
+
+function startDrag(e) {
+  isDragging = true;
+  e.preventDefault();
+}
+
+function stopDrag() {
+  isDragging = false;
+}
+
+function drag(e) {
+  if (!isDragging) return;
+
+  let clientX = e.clientX || (e.touches && e.touches[0].clientX);
+  let gameRect = game.getBoundingClientRect();
+
+  let newLeft = clientX - gameRect.left - player.offsetWidth / 2;
+
+  // تحديد الحد المسموح
+  newLeft = Math.max(0, Math.min(newLeft, game.offsetWidth - player.offsetWidth));
+
+  player.style.left = newLeft + "px";
+  playerPos = newLeft; // لتحديث موضع اللاعب
+}
+
+// ✅ إنشاء العقبات
 function createObstacle() {
   const obstacle = document.createElement("div");
   obstacle.classList.add("obstacle");
   obstacle.style.left = Math.floor(Math.random() * 270) + "px";
   game.appendChild(obstacle);
-  let posY = 0;
 
+  let posY = 0;
   const move = setInterval(() => {
     posY += fallSpeed;
     obstacle.style.top = posY + "px";
+
+    const playerLeft = parseInt(player.style.left);
 
     // التصادم
     if (
       posY > 360 &&
       posY < 400 &&
-      Math.abs(parseInt(obstacle.style.left) - playerPos) < 30
+      Math.abs(parseInt(obstacle.style.left) - playerLeft) < 30
     ) {
       clearInterval(move);
       alert("انتهت اللعبة! نقاطك: " + score);
       location.reload();
     }
 
-    // نجح اللاعب بتفادي العقبة
+    // اجتاز العقبة
     if (posY > 400) {
       clearInterval(move);
       obstacle.remove();
@@ -64,10 +87,10 @@ function createObstacle() {
   }, 30);
 }
 
-// إنشاء العقبات بشكل مستمر
+// إنشاء العقبات
 setInterval(createObstacle, 1000);
 
-// زيادة تدريجية للسرعة
+// زيادة السرعة تدريجيًا
 setInterval(() => {
   if (fallSpeed < 15) fallSpeed += 0.5;
 }, 5000);
