@@ -4,7 +4,7 @@ const scoreElement = document.getElementById("score");
 
 let playerPos = 135;
 let score = 0;
-let fallSpeed = 10;
+let fallSpeed = 15;
 
 // ✅ حركة الأسهم (كيبورد)
 document.addEventListener("keydown", (e) => {
@@ -92,5 +92,5 @@ setInterval(createObstacle, 1000);
 
 // زيادة السرعة تدريجيًا
 setInterval(() => {
-  if (fallSpeed < 20) fallSpeed += 2;
+  if (fallSpeed < 30) fallSpeed += 2;
 }, 5000);
