@@ -2,53 +2,130 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>اختر لعبتك</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>لعبة سرعة التفاعل</title>
   <style>
     body {
-      background-color: #111;
+      margin: 0;
+      padding: 0;
+      background: #111;
       color: #fff;
       font-family: sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
+      text-align: center;
     }
-
-    h1 {
-      margin-bottom: 30px;
-      font-size: 32px;
+    #game {
+      position: relative;
+      width: 100%;
+      max-width: 300px;
+      height: 400px;
+      margin: 40px auto;
+      background: #222;
+      border: 2px solid #fff;
+      overflow: hidden;
+      touch-action: none;          /* يمنع التمرير أثناء اللعب */
     }
-
-    .button-container {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
+    #player {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      background: #e74c3c;
+      bottom: 10px;
+      left: 135px;
     }
-
-    button {
-      background-color: #444;
-      color: white;
-      padding: 15px 25px;
-      border: none;
-      border-radius: 8px;
-      font-size: 20px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
+    .obstacle {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      background: #ecf0f1;
+      top: 0;
     }
-
-    button:hover {
-      background-color: #666;
+    #score {
+      font-size: 24px;
+      margin-top: 15px;
     }
   </style>
 </head>
+
 <body>
-  <h1>اختر اللعبة</h1>
-  <div class="button-container">
-    <button onclick="location.href='index.html'">🎯 لعبة سرعة التفاعل</button>
-    <button onclick="location.href='xo.html'">❌⭕ لعبة XO</button>
+  <h1>🎯 لعبة سرعة التفاعل</h1>
+  <div id="game">
+    <div id="player"></div>
   </div>
+  <div id="score">النقاط: 0</div>
+
+  <script>
+    const player = document.getElementById("player");
+    const game   = document.getElementById("game");
+    const scoreE = document.getElementById("score");
+
+    /* متغيّرات اللعبة */
+    let posX = 135;     // موضع اللاعب أفقيًا
+    let score = 0;
+    let fallSpeed = 5;  // سرعة سقوط العقبات
+    let dragging = false;
+
+    /* --- تحريك اللاعب بالأسهم --- */
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft"  && posX > 0)   posX -= 10;
+      if (e.key === "ArrowRight" && posX < 270) posX += 10;
+      player.style.left = posX + "px";
+    });
+
+    /* --- تحريك اللاعب بالسحب (ماوس / لمس) --- */
+    player.addEventListener("mousedown",  () => dragging = true);
+    player.addEventListener("touchstart", () => dragging = true);
+
+    document.addEventListener("mouseup",  () => dragging = false);
+    document.addEventListener("touchend", () => dragging = false);
+
+    document.addEventListener("mousemove", drag);
+    document.addEventListener("touchmove", drag);
+
+    function drag(e) {
+      if (!dragging) return;
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const rect    = game.getBoundingClientRect();
+      posX = clientX - rect.left - player.offsetWidth / 2;
+      posX = Math.max(0, Math.min(posX, game.offsetWidth - player.offsetWidth));
+      player.style.left = posX + "px";
+    }
+
+    /* --- إنشاء عقبة جديدة --- */
+    function createObstacle() {
+      const obs = document.createElement("div");
+      obs.classList.add("obstacle");
+      obs.style.left = Math.floor(Math.random() * 270) + "px";
+      game.appendChild(obs);
+
+      let posY = 0;
+      const timer = setInterval(() => {
+        posY += fallSpeed;
+        obs.style.top = posY + "px";
+
+        /* تصادم */
+        if (posY > 360 && posY < 400 && Math.abs(parseInt(obs.style.left) - posX) < 30) {
+          clearInterval(timer);
+          alert("انتهت اللعبة! نقاطك: " + score);
+          location.reload();
+        }
+
+        /* تجاوز العقبة */
+        if (posY > 400) {
+          clearInterval(timer);
+          obs.remove();
+          score++;
+          scoreE.textContent = "النقاط: " + score;
+        }
+      }, 30);
+    }
+
+    /* --- إنشاء عقبة كل ثانية --- */
+    setInterval(createObstacle, 1000);
+
+    /* --- زيادة السرعة تدريجيًا --- */
+    setInterval(() => {
+      if (fallSpeed < 15) fallSpeed += 0.5;
+    }, 5000);
+  </script>
 </body>
 </html>
