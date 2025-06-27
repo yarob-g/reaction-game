@@ -2,16 +2,53 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>تحدي البقاء</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="icon" type="image/jpg" href="photo_2025-06-19_13-40-26.jpg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>اختر لعبتك</title>
+  <style>
+    body {
+      background-color: #111;
+      color: #fff;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+      font-size: 32px;
+    }
+
+    .button-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    button {
+      background-color: #444;
+      color: white;
+      padding: 15px 25px;
+      border: none;
+      border-radius: 8px;
+      font-size: 20px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #666;
+    }
+  </style>
 </head>
 <body>
-  <div id="game">
-    <div id="player"></div>
+  <h1>اختر اللعبة</h1>
+  <div class="button-container">
+    <button onclick="location.href='index.html'">🎯 لعبة سرعة التفاعل</button>
+    <button onclick="location.href='xo.html'">❌⭕ لعبة XO</button>
   </div>
-  <div id="score">النقاط: 0</div>
-  <script src="script.js"></script>
 </body>
 </html>
