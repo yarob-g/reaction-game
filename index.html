@@ -6,35 +6,39 @@
   <title>اختر لعبتك</title>
   <style>
     body {
-      background-color: #111;
-      color: white;
-      font-family: sans-serif;
-      text-align: center;
-      padding: 60px;
+      background-color: #121212;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
     }
     h1 {
       margin-bottom: 40px;
       font-size: 32px;
     }
-    button {
-      margin: 20px;
-      padding: 15px 35px;
+    .button {
+      padding: 15px 30px;
+      margin: 10px;
       font-size: 18px;
+      background-color: #3498db;
       border: none;
       border-radius: 8px;
-      cursor: pointer;
-      background-color: #444;
       color: white;
-      transition: 0.3s;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
     }
-    button:hover {
-      background-color: #666;
+    .button:hover {
+      background-color: #2980b9;
     }
   </style>
 </head>
 <body>
   <h1>🎮 اختر لعبتك</h1>
-  <button onclick="location.href='reaction.html'">🎯 لعبة سرعة التفاعل</button>
-  <button onclick="location.href='xo.html'">❌⭕ لعبة XO</button>
+  <button class="button" onclick="location.href='reaction.html'">🎯 لعبة سرعة التفاعل</button>
+  <button class="button" onclick="location.href='xo.html'">❌⭕ لعبة XO</button>
 </body>
 </html>
